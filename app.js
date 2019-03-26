@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // 静态资源
-app.use('/public', path.join(__dirname, './public'))
+app.use('/public', express.static(path.join(__dirname, './public')))
 
 // 挂载路由
 app.use(router)
