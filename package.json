@@ -1,15 +1,17 @@
 {
   "name": "crud-template",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "node build.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "art-template": "^4.13.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.4"
   },

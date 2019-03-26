@@ -1,9 +1,14 @@
 ## 基于一个db.json，实现简单的CURD的操作:yum:
 
+#### 1.1.0更新说明
+1. 增加了多个数据源的访问
+
+
+
 #### 起步
 1. 命令:`git clone https://github.com/Z-HNAN/json-server-crud.git` 整个项目。
 2. 命令:`npm install` 安装相关的依赖文件。
-3. 去`config.js`文件中, 修改全局的objectName, 例如objectName:"student"。
+3. 去`config.js`文件中, 修改全局的objectName, 例如objectName:["student","post"]。
 4. 自定以数据库文件`db.json`，这里的objectName必须和第三步的相同,例如
   - **这里必须要对每一项加上id这个属性**
 ~~~json
@@ -15,7 +20,8 @@
   ]
 }
 ~~~
-5. 命令:`npm start`，启动项目，即可更具API进行对db.json文件的相关操作
+5. 命令:`npm run build` 构建项目，生成相应的路由文件
+6. 命令:`npm start`，启动项目，即可更具API进行对db.json文件的相关操作
 
 #### 路由表的设计
 示例以student为例， 均为json的数据交互
@@ -122,12 +128,12 @@
 
 #### 目录结构
 ~~~shell
-app.js            // --> 程序主入口
+|- template       // --> 用于构建的模板路由文件
+app.js            // --> 程序运行主入口
+build.js          // --> 程序构建入口
 config.js         // --> 配置文件
 dataSource.js     // --> 封装的数据源操作文件      
 db.json           // --> 数据文件         
-router.js         // --> 路由配置文件        
-testDS.js         // --> 测试文件，可以用此文件测试 
 package-lock.json                   
 package.json                 
 README.md         

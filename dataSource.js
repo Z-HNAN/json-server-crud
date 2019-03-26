@@ -6,8 +6,8 @@
  * 
  * */
 let config = require('./config')
+let path = require('path')
 
-const OBJECT_NAME = config.objectName
 
 let fs = require('fs')
 
@@ -15,22 +15,22 @@ let fs = require('fs')
 let dbPath = './db.json'
 
 // 查询模块
-exports.find = function(callback) {
+exports.find = function(objectName, callback) {
   fs.readFile(dbPath, 'utf8', function(err, data) {
     if (err) {
       return callback && callback(err)
     }
     // 读取成功
-    callback && callback(null, JSON.parse(data)[OBJECT_NAME])
+    callback && callback(null, JSON.parse(data)[objectName])
   })
 }
-exports.findById = function(id, callbcak) {
+exports.findById = function(objectName, id, callbcak) {
   fs.readFile(dbPath, 'utf8', function(err, data) {
     if (err) {
       return callback && callback(err)
     }
     // 读取成功
-    let objects = JSON.parse(data)[OBJECT_NAME]
+    let objects = JSON.parse(data)[objectName]
     let object = objects.find(item => parseInt(item.id) === parseInt(id))
     // 排空情况
     object = object ? object : {}
@@ -39,13 +39,13 @@ exports.findById = function(id, callbcak) {
 }
 
 // 添加模块
-exports.add = function(newObject, callback) {
+exports.add = function(objectName, newObject, callback) {
   fs.readFile(dbPath, 'utf8', function(err, data) {
     if (err) {
       return callback && callback(err)
     }
     // 读取成功
-    let objects = JSON.parse(data)[OBJECT_NAME]
+    let objects = JSON.parse(data)[objectName]
     // 设置新的student,并同步数据
     if (objects.length <= 0) {
       // 此时为一个空的表
@@ -61,24 +61,24 @@ exports.add = function(newObject, callback) {
 
     objects.push(newObject)
     // 同步数据库
-    updateDB(objects, newObject, callback)
+    updateDB(objectName, objects, newObject, callback)
   })
 }
 
 // 修改模块
-exports.update = function(newObject, callback) {
+exports.update = function(objectName, newObject, callback) {
   fs.readFile(dbPath, 'utf8', function(err, data) {
     if (err) {
       return callback && callback(err)
     }
     // 读取成功
-    let objects = JSON.parse(data)[OBJECT_NAME]
-    // 寻找指定学生
+    let objects = JSON.parse(data)[objectName]
+    // 寻找对象
     let oldObject = objects.find(item => parseInt(item.id) === parseInt(newObject.id))
     if (!oldObject) {
       return callback && callback(null, {})
     }
-    // 拷贝指定学生
+    // 拷贝指定对象
     for (key in oldObject) {
       if (newObject[key]) {
         // 只有key更新了才去修改，否则直接跳过
@@ -86,28 +86,28 @@ exports.update = function(newObject, callback) {
       }
     }
     // 同步数据
-    updateDB(objects, oldObject, callback)
+    updateDB(objectName, objects, oldObject, callback)
   })
 }
 
 // 删除模块
-exports.remove = function(id, callback) {
+exports.remove = function(objectName, id, callback) {
   fs.readFile(dbPath, 'utf8', function(err, data) {
     if (err) {
       return callback && callback(err)
     }
     // 读取成功
-    let objects = JSON.parse(data)[OBJECT_NAME]
+    let objects = JSON.parse(data)[objectName]
     // 寻找指定id学生的index
     let removeObjectIndex = objects.findIndex(item => parseInt(item.id) === parseInt(id))
     if (removeObjectIndex === -1) {
       let obj = {}
-      obj[OBJECT_NAME] = "{}"
+      obj[objectName] = "{}"
       return callback && callback(null, obj)
     }
     // 删除学生
     outObject = objects.splice(removeObjectIndex, 1)
-    updateDB(objects, outObject, callback)
+    updateDB(objectName, objects, outObject, callback)
   })
 }
 
@@ -115,15 +115,24 @@ exports.remove = function(id, callback) {
  * 更新学生信息
  * @param {Object} objects 对象集合
  */
-let updateDB = function(objects, outObject, callback) {
-  let obj = {}
-  obj[OBJECT_NAME] = objects
-  let objectsStr = JSON.stringify(obj)
+let updateDB = function(objectName, objects, outObject, callback) {
 
-  fs.writeFile(dbPath, objectsStr, function(err) {
-    if (err) {
-      return callback && callback(err)
-    }
-    callback && callback(null, outObject)
+  let srcDate = {}
+  // 先获取所有的内容，然后更具指定的要求进行替换
+  fs.readFile(path.join(__dirname, dbPath), "utf-8", (err, data) => {
+    if (err => callback && callback(err)) 
+    srcDate = JSON.parse(data)
+    // 替换新修改的数据
+    srcDate[objectName] = objects
+    let srcDateStr = JSON.stringify(srcDate)
+    // 写入数据
+    fs.writeFile(path.join(__dirname, dbPath), srcDateStr, function(err) {
+      if (err) {
+        return callback && callback(err)
+      }
+      callback && callback(null, outObject)
+    })
+    
   })
+  
 }

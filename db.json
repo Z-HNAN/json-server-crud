@@ -1,1 +1,17 @@
-{"student":[{"id":1,"gender":"0","name":"葫芦娃","age":"8","speciality":"小葫芦"},{"id":2,"gender":"0","name":"大娃","age":"8","speciality":"力大无比，金刚不坏之身"},{"name":"二娃","age":"10","id":3,"gender":"","speciality":""}]}
+{
+  // 模板数据， 可自行定义
+  "student": [
+  {"id":1, "name":"zhn", "age": 10},
+  {"id":2, "name":"hlw", "age": 88}
+],
+
+"game": [
+  {"id":1, "name":"王者荣耀", "author":"腾讯"},
+  {"id":2, "name":"跳一跳", "author":"微信"}
+],
+
+"post": [
+  {"id":1, "title":"博文一", "content":"这是我的第一篇博文"},
+  {"id":2, "title":"博文二", "content":"这肯定是第二篇博文内容咯"}
+]
+}
