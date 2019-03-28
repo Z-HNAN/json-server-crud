@@ -13,7 +13,7 @@ router.all('/*', function (req, res, next) {
   // 此时是以api为开头的访问
   res.header('Access-Control-Allow-Origin', '*')
   //Access-Control-Allow-Headers ,可根据浏览器的F12查看,把对应的粘贴在这里就行
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, accept, content-type')
   res.header('Access-Control-Allow-Methods', '*')
   res.header('Content-Type', 'application/json;charset=utf-8')
   next()
